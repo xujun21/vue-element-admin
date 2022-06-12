@@ -1,24 +1,33 @@
 <template>
   <div class="app-container">
     <el-form ref="listQuery" :model="listQuery">
-      <el-form-item label="渠道" label-width="100px" prop="sttusCodes">
-        <el-radio-group v-model="listQuery.channel" @change="getList">
-          <el-radio v-for="item in form.channelList" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
+      <el-form-item label="状态" label-width="100px" prop="status">
+        <el-radio-group v-model="listQuery.status" @change="getList">
+          <el-radio v-for="item in form.statusList" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
         </el-radio-group>
       </el-form-item>
 
       <el-form-item>
-        <el-col :span="4">
-          <el-input v-model="listQuery.msg" placeholder="内容关键字" style="width: 95%;" />
+        <el-col :span="3">
+          <el-input v-model="listQuery.topic" placeholder="主题" style="width: 95%;" />
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="listQuery.orderId" placeholder="编号" style="width: 95%;" />
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="listQuery.memberId" placeholder="客户ID" style="width: 95%;" />
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="listQuery.nickname" placeholder="客户名" style="width: 95%;" />
+        </el-col>
+        <el-col :span="3">
+          <el-input v-model="listQuery.phone" placeholder="客户手机号" style="width: 95%;" />
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="listQuery.cicer" placeholder="坐席" style="width: 95%;" />
         </el-col>
         <el-col :span="4">
-          <el-input v-model="listQuery.memberId" placeholder="会员ID" style="width: 95%;" />
-        </el-col>
-        <el-col :span="4">
-          <el-input v-model="listQuery.nickname" placeholder="昵称" style="width: 95%;" />
-        </el-col>
-        <el-col :span="4">
-          <el-input v-model="listQuery.phone" placeholder="手机号" style="width: 95%;" />
+          <el-input v-model="listQuery.startTime" placeholder="受理时间" style="width: 95%;" />
         </el-col>
         <el-col :span="2">
           <el-button @click="getList">查询</el-button>
@@ -28,40 +37,60 @@
     </el-form>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="会话ID" width="100px">
+      <el-table-column align="center" label="编号" width="100px">
         <template slot-scope="scope">
-          <span>{{ scope.row.chatid }}</span>
+          <span>{{ scope.row.orderId }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="400px" align="center" label="内容(未读条数)">
+      <el-table-column width="150px" align="center" label="主题">
         <template slot-scope="scope">
-          <span>{{ scope.row.msg }}({{ scope.row.msgCnt }})</span>
+          <span>{{ scope.row.topic }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="渠道" width="100px">
+      <el-table-column align="center" label="处理状态" width="100px">
         <template slot-scope="{row}">
-          <el-tag :type="row.channel">
-            {{ row.channel }}
+          <el-tag :type="row.statsus">
+            {{ row.status }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="会员ID" width="150px">
+      <el-table-column align="center" label="门店名称" width="200px">
+        <template slot-scope="scope">
+          <span>宝岛眼镜{{ scope.row.shopName }}店</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="客户ID" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.memberId }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="150px" align="center" label="昵称">
+      <el-table-column width="200px" align="center" label="客户联系人(联系方式)">
         <template slot-scope="scope">
-          <span>{{ scope.row.nickname }}</span>
+          <span>{{ scope.row.nickname }}<font color="blue">({{ scope.row.phone }})</font></span>
         </template>
       </el-table-column>
-      <el-table-column width="150px" align="center" label="手机号">
+      <el-table-column width="100px" align="center" label="咨询通道">
         <template slot-scope="scope">
-          <span>{{ scope.row.phone }}</span>
+          <span>{{ scope.row.channel }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="150px" align="center" label="咨询问题类型">
+        <template slot-scope="scope">
+          <span>{{ scope.row.type }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="150px" align="center" label="坐席">
+        <template slot-scope="scope">
+          <span>{{ scope.row.cicer }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="150px" align="center" label="接收人(工号)">
+        <template slot-scope="scope">
+          <span>{{ scope.row.dealer }}({{ scope.row.dealerNo }})</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="发起时间">
+      <el-table-column width="180px" align="center" label="受理时间">
         <template slot-scope="scope">
           <span>{{ scope.row.startTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
@@ -74,18 +103,23 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total > 0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
-      @pagination="getList" />
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
-import { chatsList } from '@/api/remote-search'
+import { OrdersList } from '@/api/remote-search'
 
 export default {
-  name: 'ChatsList',
+  name: 'OrdersList',
   components: { Pagination },
   filters: {
     //
@@ -99,25 +133,44 @@ export default {
         page: 1,
         limit: 10,
         memberId: '',
-        nickname: '',
-        parentType: ''
+        nickname: ''
       },
 
       form: {
-        channelList: [
+        statusList: [
           {
             label: '所有',
             value: '',
-            selected: true
-          },
-          {
-            label: '小程序',
-            value: 'xcx',
             selected: false
           },
           {
-            label: '公众号',
-            value: 'public',
+            label: '待处理',
+            value: 'todo',
+            selected: true
+          },
+          {
+            label: '处理中',
+            value: 'doing',
+            selected: false
+          },
+          {
+            label: '已回复',
+            value: 'replied',
+            selected: false
+          },
+          {
+            label: '待回访',
+            value: 'to_recall',
+            selected: false
+          },
+          {
+            label: '已回访',
+            value: 'recalled',
+            selected: false
+          },
+          {
+            label: '处理完毕',
+            value: 'done',
             selected: false
           }
         ]
@@ -131,7 +184,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      chatsList(this.listQuery).then(response => {
+      OrdersList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
         this.listLoading = false
@@ -169,5 +222,3 @@ export default {
   top: 10px;
 }
 </style>
-
-
