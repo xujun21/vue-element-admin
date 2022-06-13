@@ -10,8 +10,8 @@ const cicRouter = {
   redirect: '/cic/orders/list',
   name: 'CIC',
   meta: {
-    title: '客服管理',
-    icon: 'edit'
+    title: '客服系统',
+    icon: 'cic'
   },
   children: [
     {
@@ -31,13 +31,20 @@ const cicRouter = {
           component: () => import('@/views/cic/records/new'),
           name: 'New',
           meta: { title: '新建记录' }
+        },
+        {
+          path: 'edit/:id(\\d+)',
+          component: () => import('@/views/cic/records/new'),
+          name: 'Edit',
+          meta: { title: '修改记录' },
+          hidden: true
         }
       ]
     },
     {
       path: 'orders',
-      component: () => import('@/views/cic/orders/index'),
       name: 'Orders',
+      component: () => import('@/views/cic/orders/index'),
       meta: { title: '工单管理' },
       redirect: '/cic/orders/list',
       children: [
