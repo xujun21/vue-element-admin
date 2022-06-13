@@ -1,40 +1,25 @@
 <template>
   <div class="app-container">
-    <el-form ref="listQuery" :model="listQuery">
-      <el-form-item label="状态" label-width="100px" prop="status">
-        <el-radio-group v-model="listQuery.status" @change="getList">
-          <el-radio v-for="item in form.statusList" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
-        </el-radio-group>
-      </el-form-item>
+    <div class="filter-container">
+      <el-input v-model="listQuery.topic" placeholder="主题" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-input v-model="listQuery.orderId" placeholder="编号" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-input v-model="listQuery.memberId" placeholder="客户ID" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-input v-model="listQuery.nickname" placeholder="客户名" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-input v-model="listQuery.phone" placeholder="客户手机号" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-input v-model="listQuery.cicer" placeholder="坐席" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-select v-model="listQuery.status" placeholder="状态" clearable class="filter-item" style="width: 130px">
+        <el-option v-for="item in form.statusList" :key="item.key" :label="item.label" :value="item.key" />
+      </el-select>&nbsp;
+      <el-date-picker v-model="listQuery.startTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="受理起始时间" />&nbsp;
+      <el-date-picker v-model="listQuery.endTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="受理结束时间" />&nbsp;
 
-      <el-form-item>
-        <el-col :span="3">
-          <el-input v-model="listQuery.topic" placeholder="主题" style="width: 95%;" />
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="listQuery.orderId" placeholder="编号" style="width: 95%;" />
-        </el-col>
-        <el-col :span="3">
-          <el-input v-model="listQuery.memberId" placeholder="客户ID" style="width: 95%;" />
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="listQuery.nickname" placeholder="客户名" style="width: 95%;" />
-        </el-col>
-        <el-col :span="3">
-          <el-input v-model="listQuery.phone" placeholder="客户手机号" style="width: 95%;" />
-        </el-col>
-        <el-col :span="2">
-          <el-input v-model="listQuery.cicer" placeholder="坐席" style="width: 95%;" />
-        </el-col>
-        <el-col :span="4">
-          <el-input v-model="listQuery.startTime" placeholder="受理时间" style="width: 95%;" />
-        </el-col>
-        <el-col :span="2">
-          <el-button @click="getList">查询</el-button>
-        </el-col>
-      </el-form-item>
-
-    </el-form>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        查询
+      </el-button>&nbsp;
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+        新建工单
+      </el-button>
+    </div>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="编号" width="100px">
@@ -98,7 +83,9 @@
 
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="onDeal(scope.row.chatid)">接单处理</el-button>
+          <router-link :to="'/cic/orders/edit/'+scope.row.orderId">
+            <el-button type="primary" size="small" icon="el-icon-edit">处理</el-button>
+          </router-link>
         </template>
       </el-table-column>
     </el-table>
@@ -179,10 +166,10 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.handleFilter()
   },
   methods: {
-    getList() {
+    handleFilter() {
       this.listLoading = true
       OrdersList(this.listQuery).then(response => {
         this.list = response.data.items
@@ -190,22 +177,8 @@ export default {
         this.listLoading = false
       })
     },
-    onDeal(chatid) {
-      this.$confirm('进入会话ID为' + chatid + '的会话窗口', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        closeOnClickModal: false
-      }).then(() => {
-        this.promptCode(chatid)
-      }).catch(() => {
-        /*
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-        */
-      })
+    handleCreate() {
+      this.$router.push('/cic/orders/new')
     }
   }
 }
