@@ -11,28 +11,14 @@
       <div class="createPost-main-container">
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="渠道：" class="postInfo-container-item">
-              <el-select v-model="postForm.channel" placeholder="请选择来源渠道">
-                <el-option
-                  v-for="item in channelList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+            <el-form-item label-width="150px" label="客户姓名：" class="postInfo-container-item">
+              <el-input v-model="postForm.nick_name" type="text" autosize placeholder="客户姓名" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="客户姓名：" class="postInfo-container-item">
-              <el-input v-model="postForm.content_short" type="text" autosize placeholder="客户姓名" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="等级：" class="postInfo-container-item">
+            <el-form-item label-width="150px" label="会员等级：" class="postInfo-container-item">
               <el-select v-model="postForm.level" placeholder="请选择会员等级">
                 <el-option
                   v-for="item in levelList"
@@ -44,30 +30,30 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="32">
+        <el-row v-if="isEdit" :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="会员卡号" class="postInfo-container-item">
+            <el-form-item label-width="150px" label="会员卡号" class="postInfo-container-item">
               <el-input v-model="postForm.card_number" type="text" autosize placeholder="会员卡号" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="联系电话" class="postInfo-container-item">
+            <el-form-item label-width="150px" label="联系电话" class="postInfo-container-item">
               <el-input v-model="postForm.tel" type="text" autosize placeholder="联系电话" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="this.$route.params.id" :gutter="32">
+        <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="会员手机号：" class="postInfo-container-item">
+            <el-form-item label-width="150px" label="会员手机号：" class="postInfo-container-item">
               <el-input v-model="postForm.mobile" type="text" autosize placeholder="会员手机号" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="客户性别：" class="postInfo-container-item">
+            <el-form-item label-width="150px" label="客户性别：" class="postInfo-container-item">
               <el-radio v-model="sex" label="1">男</el-radio>
               <el-radio v-model="sex" label="0">女</el-radio>
             </el-form-item>
@@ -75,7 +61,7 @@
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="大区：" class="postInfo-container-item">
+            <el-form-item label-width="150px" label="大区：" class="postInfo-container-item">
               <el-select v-model="postForm.area" placeholder="选择注册/来源大区">
                 <el-option
                   v-for="item in areaList"
@@ -89,7 +75,7 @@
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="事业部：" class="postInfo-container-item">
+            <el-form-item label-width="150px" label="事业部：" class="postInfo-container-item">
               <el-select v-model="postForm.city" placeholder="选择注册/来源事业部">
                 <el-option
                   v-for="item in cityList"
@@ -103,11 +89,67 @@
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="100px" label="门店：" class="postInfo-container-item">
+            <el-form-item label-width="150px" label="门店：" class="postInfo-container-item">
               <el-select v-model="postForm.shop" placeholder="选择注册/来源门店">
                 <el-option
                   v-for="item in shopList"
                   :key="item.vaule"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="32">
+          <el-col :xs="24" :sm="24" :lg="8">
+            <el-form-item label-width="150px" label="最近服务大区：" class="postInfo-container-item">
+              <el-select v-model="postForm.last_area" placeholder="选择最近服务大区">
+                <el-option
+                  v-for="item in areaList"
+                  :key="item.vaule"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="32">
+          <el-col :xs="24" :sm="24" :lg="8">
+            <el-form-item label-width="150px" label="最近服务事业部：" class="postInfo-container-item">
+              <el-select v-model="postForm.last_city" placeholder="选择最近服务事业部">
+                <el-option
+                  v-for="item in cityList"
+                  :key="item.vaule"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="32">
+          <el-col :xs="24" :sm="24" :lg="8">
+            <el-form-item label-width="150px" label="最近服务门店：" class="postInfo-container-item">
+              <el-select v-model="postForm.last_shop" placeholder="选择最近服务门店">
+                <el-option
+                  v-for="item in shopList"
+                  :key="item.vaule"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="32">
+          <el-col :xs="24" :sm="24" :lg="8">
+            <el-form-item label-width="150px" label="注册渠道：" class="postInfo-container-item">
+              <el-select v-model="postForm.channel" placeholder="请选择来源渠道">
+                <el-option
+                  v-for="item in channelList"
+                  :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 />
@@ -124,25 +166,16 @@
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
+import { fetchMember } from '@/api/member'
 import { searchUser } from '@/api/remote-search'
 
 const defaultForm = {
   status: 'draft',
-  title: '', // 文章题目
-  content: '', // 文章内容
-  content_short: '', // 文章摘要
-  source_uri: '', // 文章外链
-  image_uri: '', // 文章图片
-  display_time: undefined, // 前台展示时间
-  id: undefined,
-  platforms: ['a-platform'],
-  comment_disabled: false,
-  importance: 0
+  id: undefined
 }
 
 export default {
-  name: 'ArticleDetail',
+  name: 'MemberDetail',
   components: { Sticky },
   props: {
     isEdit: {
@@ -179,6 +212,9 @@ export default {
     }
     return {
       levelList: [{
+        value: '-1',
+        label: '潜客'
+      }, {
         value: '0',
         label: '普通会员'
       }, {
@@ -215,13 +251,13 @@ export default {
       sex: '1',
       channelList: [{
         value: '0',
-        label: '公众号'
+        label: '客服注册'
       }, {
         value: '1',
-        label: '会员小程序'
+        label: '门店注册'
       }, {
         value: '2',
-        label: '优选商城小程序'
+        label: '线上注册'
       }],
       postForm: Object.assign({}, defaultForm),
       loading: false,
@@ -230,7 +266,8 @@ export default {
         image_uri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
         content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
+        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }],
+        nick_name: [{ validator: validateRequire }]
       },
       tempRoute: {}
     }
@@ -238,21 +275,10 @@ export default {
   computed: {
     contentShortLength() {
       return this.postForm.content_short.length
-    },
-    displayTime: {
-      // set and get is useful when the data
-      // returned by the back end api is different from the front end
-      // back end return => "2013-06-25 06:59:25"
-      // front end need timestamp => 1372114765000
-      get() {
-        return (+new Date(this.postForm.display_time))
-      },
-      set(val) {
-        this.postForm.display_time = new Date(val)
-      }
     }
   },
   created() {
+    console.log(this.isEdit)
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
@@ -265,12 +291,12 @@ export default {
   },
   methods: {
     fetchData(id) {
-      fetchArticle(id).then(response => {
+      fetchMember(id).then(response => {
         this.postForm = response.data
 
-        // just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
+        // // just for test
+        // this.postForm.title += `   Article Id:${this.postForm.id}`
+        // this.postForm.content_short += `   Article Id:${this.postForm.id}`
 
         // set tagsview title
         this.setTagsViewTitle()
@@ -282,13 +308,13 @@ export default {
       })
     },
     setTagsViewTitle() {
-      const title = 'Edit Article'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
+      const title = '编辑会员'
+      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.nick_name}` })
       this.$store.dispatch('tagsView/updateVisitedView', route)
     },
     setPageTitle() {
-      const title = 'Edit Article'
-      document.title = `${title} - ${this.postForm.id}`
+      const title = '编辑会员'
+      document.title = `${title} - ${this.postForm.nick_name}`
     },
     submitForm() {
       console.log(this.postForm)
@@ -304,26 +330,10 @@ export default {
           this.postForm.status = 'published'
           this.loading = false
         } else {
-          console.log('error submit!!')
+          console.log('提交失败!!')
           return false
         }
       })
-    },
-    draftForm() {
-      if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
-        this.$message({
-          message: '请填写必要的标题和内容',
-          type: 'warning'
-        })
-        return
-      }
-      this.$message({
-        message: '保存成功',
-        type: 'success',
-        showClose: true,
-        duration: 1000
-      })
-      this.postForm.status = 'draft'
     },
     getRemoteUserList(query) {
       searchUser(query).then(response => {

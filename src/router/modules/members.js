@@ -15,23 +15,23 @@ const membersRouter = {
   },
   children: [
     {
-      path: 'list',
-      name: 'List',
-      component: () => import('@/views/members/list'),
-      meta: { title: '会员列表' }
-    },
-    {
-      path: 'new',
-      name: 'New',
-      component: () => import('@/views/members/new'),
-      meta: { title: '新建会员' }
+      path: 'create',
+      component: () => import('@/views/members/create'),
+      name: 'CreateMember',
+      meta: { title: '新建会员', icon: 'edit' }
     },
     {
       path: 'edit/:id(\\d+)',
-      name: 'Edit',
-      component: () => import('@/views/members/new'),
-      meta: { title: '修改会员' },
+      component: () => import('@/views/members/edit'),
+      name: 'EditMember',
+      meta: { title: '修改会员', noCache: true, activeMenu: '/members/list' },
       hidden: true
+    },
+    {
+      path: 'list',
+      component: () => import('@/views/members/list'),
+      name: 'MembersList',
+      meta: { title: '会员列表', icon: 'list' }
     }
   ]
 }

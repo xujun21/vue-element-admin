@@ -2,10 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.memberId" placeholder="会员卡号" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
-      <el-input v-model="listQuery.openid" placeholder="客户openid" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-input v-model="listQuery.openid" placeholder="客户openid" style="width: 180px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
       <el-input v-model="listQuery.nickname" placeholder="客户姓名" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
-      <el-input v-model="listQuery.phone" placeholder="客户手机号" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
-      <el-input v-model="listQuery.tel" placeholder="客户联系电话" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-input v-model="listQuery.phone" placeholder="客户手机号" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-input v-model="listQuery.tel" placeholder="客户联系电话" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
       <br>
       <el-date-picker v-model="listQuery.birthday" type="datetime" format="yyyy-MM-dd" placeholder="客户生日" />
       <el-date-picker v-model="listQuery.startTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="注册日期" />～
@@ -85,7 +85,7 @@
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
-      @pagination="getList"
+      @pagination="handleFilter"
     />
   </div>
 </template>
@@ -93,7 +93,7 @@
 <script>
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
-import { MembersList } from '@/api/member'
+import { fetchList } from '@/api/member'
 
 export default {
   name: 'MembersList',
@@ -120,14 +120,14 @@ export default {
   methods: {
     handleFilter() {
       this.listLoading = true
-      MembersList(this.listQuery).then(response => {
+      fetchList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
         this.listLoading = false
       })
     },
     handleCreate() {
-      this.$router.push('/members/new')
+      this.$router.push('/members/create')
     }
   }
 }
