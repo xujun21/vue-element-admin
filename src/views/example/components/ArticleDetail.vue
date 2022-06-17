@@ -211,7 +211,7 @@ export default {
           this.loading = true
           this.$notify({
             title: '成功',
-            message: '发布文章成功',
+            message: '保存成功',
             type: 'success',
             duration: 2000
           })

@@ -3,6 +3,12 @@
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
 
       <sticky :z-index="10" :class-name="'sub-navbar '+postForm.status">
+        <el-button v-loading="loading" style="margin-left: 10px;" @click="handelView(0)">
+          验光记录
+        </el-button>
+        <el-button v-loading="loading" style="margin-left: 10px;" @click="handelView(1)">
+          购物记录
+        </el-button>
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
           保存提交
         </el-button>
@@ -165,13 +171,13 @@
 
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { validURL } from '@/utils/validate'
 import { fetchMember } from '@/api/member'
-import { searchUser } from '@/api/remote-search'
 
 const defaultForm = {
   status: 'draft',
-  id: undefined
+  id: undefined,
+  nick_name: '',
+  area: ''
 }
 
 export default {
@@ -185,27 +191,13 @@ export default {
   },
   data() {
     const validateRequire = (rule, value, callback) => {
+      console.log('asdf')
       if (value === '') {
         this.$message({
           message: rule.field + '为必传项',
           type: 'error'
         })
         callback(new Error(rule.field + '为必传项'))
-      } else {
-        callback()
-      }
-    }
-    const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback()
-        } else {
-          this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
-        }
       } else {
         callback()
       }
@@ -261,21 +253,14 @@ export default {
       }],
       postForm: Object.assign({}, defaultForm),
       loading: false,
-      userListOptions: [],
       rules: {
-        image_uri: [{ validator: validateRequire }],
-        title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }],
-        nick_name: [{ validator: validateRequire }]
+        nick_name: [{ validator: validateRequire, trigger: 'blur' }],
+        area: [{ validator: validateRequire }]
       },
       tempRoute: {}
     }
   },
   computed: {
-    contentShortLength() {
-      return this.postForm.content_short.length
-    }
   },
   created() {
     console.log(this.isEdit)
@@ -291,6 +276,7 @@ export default {
   },
   methods: {
     fetchData(id) {
+      console.log('id=' + id)
       fetchMember(id).then(response => {
         this.postForm = response.data
 
@@ -335,11 +321,12 @@ export default {
         }
       })
     },
-    getRemoteUserList(query) {
-      searchUser(query).then(response => {
-        if (!response.data.items) return
-        this.userListOptions = response.data.items.map(v => v.name)
-      })
+    handelView(p) {
+      if (p === 0) {
+        this.$router.push('/members/service_detail')
+      } else {
+        this.$router.push('/members/shopping_detail')
+      }
     }
   }
 }

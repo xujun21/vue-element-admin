@@ -21,8 +21,10 @@
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="客户姓名（联系电话）" width="180px">
-        <template slot-scope="scope">
-          <span>{{ scope.row.nickname }}({{ scope.row.tel }})</span>
+        <template slot-scope="{row}">
+          <router-link :to="'/members/edit/'+row.memberId">
+            {{ row.nickname }}({{ row.tel }})
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column width="120px" align="center" label="客户手机号">
@@ -71,10 +73,16 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" width="300">
         <template slot-scope="scope">
           <router-link :to="'/members/edit/'+scope.row.memberId">
             <el-button type="primary" size="small" icon="el-icon-edit">查看/修改</el-button>
+          </router-link>&nbsp;
+          <router-link :to="'/members/edit/'+scope.row.memberId">
+            <el-button type="primary" size="small">验光记录</el-button>
+          </router-link>&nbsp;
+          <router-link :to="'/members/edit/'+scope.row.memberId">
+            <el-button type="primary" size="small">购物记录</el-button>
           </router-link>
         </template>
       </el-table-column>
