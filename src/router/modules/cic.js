@@ -7,8 +7,7 @@ import Layout from '@/layout'
 const cicRouter = {
   path: '/cic',
   component: Layout,
-  redirect: '/cic/orders/list',
-  name: 'CIC',
+  name: 'Cic',
   meta: {
     title: '客服系统',
     icon: 'cic'
@@ -17,25 +16,28 @@ const cicRouter = {
     {
       path: 'records',
       name: 'Records',
-      component: () => import('@/views/cic/records/list'),
-      meta: { title: '业务记录' },
+      component: () => import('@/views/cic/records/index'),
+      meta: {
+        title: '业务记录',
+        icon: 'list'
+      },
       children: [
         {
           path: 'list',
-          component: () => import('@/views/cic/records/list'),
-          name: 'Records',
+          component: () => import('@/views/cic/records/list/index'),
+          name: 'RecordsList',
           meta: { title: '记录列表' }
         },
         {
-          path: 'new',
-          component: () => import('@/views/cic/records/new'),
-          name: 'New',
+          path: 'create',
+          component: () => import('@/views/cic/records/create/index'),
+          name: 'CreateRecord',
           meta: { title: '新建记录' }
         },
         {
           path: 'edit/:id(\\d+)',
-          component: () => import('@/views/cic/records/new'),
-          name: 'Edit',
+          component: () => import('@/views/cic/records/edit/index'),
+          name: 'EditRecord',
           meta: { title: '修改记录' },
           hidden: true
         }
