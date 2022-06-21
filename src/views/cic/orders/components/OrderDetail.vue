@@ -2,12 +2,9 @@
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
 
-      <sticky :z-index="10" :class-name="'sub-navbar '+postForm.status">
+      <sticky :z-index="10" :class-name="'sub-navbar ' + postForm.status">
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
-          保存记录
-        </el-button>
-        <el-button v-loading="loading" style="margin-left: 10px;" @click="handelView(1)">
-          创建工单
+          保存工单
         </el-button>
       </sticky>
 
@@ -28,14 +25,30 @@
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="记录主题：" class="postInfo-container-item">
-              <el-input v-model="postForm.topic" type="text" autosize placeholder="记录主题" />
+            <el-form-item label-width="150px" label="主题：" class="postInfo-container-item">
+              <el-input v-model="postForm.topic" type="text" autosize placeholder="主题" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="32">
+          <el-col :xs="24" :sm="24" :lg="8">
+            <el-form-item label-width="150px" label="描述：" class="postInfo-container-item">
+              <el-input v-model="postForm.desc" type="textarea" autosize placeholder="描述来源于业务记录" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
             <el-form-item label-width="150px" label="咨询问题类型：" class="postInfo-container-item">
+              <el-select v-model="postForm.type" placeholder="咨询问题类型">
+                <el-option v-for="item in typeList" :key="item.value" :value="item.value">{{ item.label }}</el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="32">
+          <el-col :xs="24" :sm="24" :lg="8">
+            <el-form-item label-width="150px" label="" class="postInfo-container-item">
               <el-select v-model="postForm.type" placeholder="咨询问题类型">
                 <el-option v-for="item in typeList" :key="item.value" :value="item.value">{{ item.label }}</el-option>
               </el-select>
@@ -51,8 +64,8 @@
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="记录手机号：" class="postInfo-container-item">
-              <el-input v-model="postForm.phone" type="text" autosize placeholder="记录手机号" />
+            <el-form-item label-width="150px" label="会员手机号：" class="postInfo-container-item">
+              <el-input v-model="postForm.phone" type="text" autosize placeholder="会员手机号" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -60,12 +73,7 @@
           <el-col :xs="24" :sm="24" :lg="8">
             <el-form-item label-width="150px" label="大区：" class="postInfo-container-item">
               <el-select v-model="postForm.area" placeholder="选择所属大区">
-                <el-option
-                  v-for="item in areaList"
-                  :key="item.vaule"
-                  :label="item.label"
-                  :value="item.value"
-                />
+                <el-option v-for="item in areaList" :key="item.vaule" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -74,12 +82,7 @@
           <el-col :xs="24" :sm="24" :lg="8">
             <el-form-item label-width="150px" label="事业部：" class="postInfo-container-item">
               <el-select v-model="postForm.city" placeholder="选择所属事业部">
-                <el-option
-                  v-for="item in cityList"
-                  :key="item.vaule"
-                  :label="item.label"
-                  :value="item.value"
-                />
+                <el-option v-for="item in cityList" :key="item.vaule" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -88,37 +91,32 @@
           <el-col :xs="24" :sm="24" :lg="8">
             <el-form-item label-width="150px" label="门店：" class="postInfo-container-item">
               <el-select v-model="postForm.shop" placeholder="选择所属门店">
-                <el-option
-                  v-for="item in shopList"
-                  :key="item.vaule"
-                  :label="item.label"
-                  :value="item.value"
-                />
+                <el-option v-for="item in shopList" :key="item.vaule" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="来源渠道：" class="postInfo-container-item">
-              <el-select v-model="postForm.channel" placeholder="请选择来源渠道">
-                <el-option
-                  v-for="item in channelList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
+            <el-form-item label-width="150px" label="处理状态：" class="postInfo-container-item">
+              <el-select v-model="postForm.status" placeholder="请选择处理状态">
+                <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="描述：" class="postInfo-container-item">
-              <el-input v-model="postForm.desc" type="textarea" autosize placeholder="描述" />
+            <el-form-item label-width="150px" label="优先级：" class="postInfo-container-item">
+              <el-radio v-model="postForm.level" label="1">高</el-radio>
+              <el-radio v-model="postForm.level" label="2">中</el-radio>
+              <el-radio v-model="postForm.level" label="3">低</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
+        咨询渠道
+        对接人
+        对接人工号
       </div>
     </el-form>
   </div>
@@ -126,7 +124,7 @@
 
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { fetchRecord } from '@/api/cic'
+import { fetchOrder } from '@/api/cic'
 
 const defaultForm = {
   status: 'draft',
@@ -136,7 +134,7 @@ const defaultForm = {
 }
 
 export default {
-  name: 'RecordDetail',
+  name: 'OrderDetail',
   components: { Sticky },
   props: {
     isEdit: {
@@ -158,6 +156,43 @@ export default {
       }
     }
     return {
+      statusList: [
+        {
+          label: '所有',
+          value: '',
+          selected: false
+        },
+        {
+          label: '待处理',
+          value: 'todo',
+          selected: true
+        },
+        {
+          label: '处理中',
+          value: 'doing',
+          selected: false
+        },
+        {
+          label: '已回复',
+          value: 'replied',
+          selected: false
+        },
+        {
+          label: '待回访',
+          value: 'to_recall',
+          selected: false
+        },
+        {
+          label: '已回访',
+          value: 'recalled',
+          selected: false
+        },
+        {
+          label: '处理完毕',
+          value: 'done',
+          selected: false
+        }
+      ],
       typeList: [
         {
           value: '咨询',
@@ -216,10 +251,10 @@ export default {
   computed: {
   },
   created() {
-    console.log(this.isEdit)
+    console.log('this.isEdit=' + this.isEdit)
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
-      this.fetchRecord(id)
+      this.fetchOrder(id)
       this.id = id
     }
 
@@ -231,7 +266,7 @@ export default {
   methods: {
     fetchData(id) {
       console.log('id=' + id)
-      fetchRecord(id).then(response => {
+      fetchOrder(id).then(response => {
         this.postForm = response.data
 
         // // just for test
@@ -248,13 +283,13 @@ export default {
       })
     },
     setTagsViewTitle() {
-      const title = '编辑记录'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.id}` })
+      const title = '编辑工单'
+      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.nick_name}` })
       this.$store.dispatch('tagsView/updateVisitedView', route)
     },
     setPageTitle() {
-      const title = '编辑记录'
-      document.title = `${title} - ${this.id}`
+      const title = '编辑工单'
+      document.title = `${title} - ${this.postForm.nick_name}`
     },
     submitForm() {
       console.log(this.postForm)

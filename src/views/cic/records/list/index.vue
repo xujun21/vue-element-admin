@@ -1,22 +1,66 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.topic" placeholder="主题" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
-      <el-input v-model="listQuery.orderId" placeholder="编号" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
-      <el-input v-model="listQuery.memberId" placeholder="客户ID" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
-      <el-input v-model="listQuery.nickname" placeholder="客户名" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
-      <el-input v-model="listQuery.phone" placeholder="客户手机号" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
-      <el-input v-model="listQuery.cicer" placeholder="坐席" style="width: 100px;" class="filter-item" @keyup.enter.native="handleFilter" />&nbsp;
+      <el-input
+        v-model="listQuery.topic"
+        placeholder="主题"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />&nbsp;
+      <el-input
+        v-model="listQuery.orderId"
+        placeholder="编号"
+        style="width: 100px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />&nbsp;
+      <el-input
+        v-model="listQuery.memberId"
+        placeholder="客户ID"
+        style="width: 100px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />&nbsp;
+      <el-input
+        v-model="listQuery.nickname"
+        placeholder="客户名"
+        style="width: 100px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />&nbsp;
+      <el-input
+        v-model="listQuery.phone"
+        placeholder="客户手机号"
+        style="width: 100px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />&nbsp;
+      <el-input
+        v-model="listQuery.cicer"
+        placeholder="坐席"
+        style="width: 100px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />&nbsp;
       <el-select v-model="listQuery.status" placeholder="状态" clearable class="filter-item" style="width: 130px">
         <el-option v-for="item in form.statusList" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>&nbsp;
-      <el-date-picker v-model="listQuery.startTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="受理起始时间" />&nbsp;
-      <el-date-picker v-model="listQuery.endTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="受理结束时间" />&nbsp;
+      <el-date-picker v-model="listQuery.startTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="受理起始时间" />
+      &nbsp;
+      <el-date-picker v-model="listQuery.endTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="受理结束时间" />
+      &nbsp;
 
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>&nbsp;
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-edit"
+        @click="handleCreate"
+      >
         新建记录
       </el-button>
     </div>
@@ -71,7 +115,7 @@
 
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <router-link :to="'/cic/records/edit/'+scope.row.orderId">
+          <router-link :to="'/cic/records/edit/' + scope.row.orderId">
             <el-button type="primary" size="small" icon="el-icon-edit">查看/修改</el-button>
           </router-link>
         </template>
@@ -83,15 +127,16 @@
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
-      @pagination="fetchList"
+      @pagination="handleFilter"
     />
+
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
-import { fetchList } from '@/api/cic.js'
+import { fetchRecordsList } from '@/api/cic.js'
 
 export default {
   name: 'FetchList',
@@ -159,7 +204,7 @@ export default {
   methods: {
     handleFilter() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchRecordsList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
         this.listLoading = false

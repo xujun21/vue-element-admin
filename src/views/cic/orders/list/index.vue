@@ -95,7 +95,7 @@
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
-      @pagination="getList"
+      @pagination="handleFilter"
     />
   </div>
 </template>
@@ -103,7 +103,7 @@
 <script>
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
-import { OrdersList } from '@/api/remote-search'
+import { fetchOrdersList } from '@/api/cic'
 
 export default {
   name: 'OrdersList',
@@ -122,7 +122,7 @@ export default {
         memberId: '',
         nickname: ''
       },
-
+      fetchOrdersList,
       form: {
         statusList: [
           {
@@ -171,14 +171,14 @@ export default {
   methods: {
     handleFilter() {
       this.listLoading = true
-      OrdersList(this.listQuery).then(response => {
+      fetchOrdersList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
         this.listLoading = false
       })
     },
     handleCreate() {
-      this.$router.push('/cic/orders/new')
+      this.$router.push('/cic/orders/create')
     }
   }
 }

@@ -16,10 +16,3 @@ export function transactionList(query) {
   })
 }
 
-export function OrdersList(query) {
-  return request({
-    url: '/vue-element-admin/search/orderList',
-    method: 'get',
-    params: query
-  })
-}
