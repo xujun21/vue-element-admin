@@ -15,6 +15,12 @@ const membersRouter = {
   },
   children: [
     {
+      path: 'list',
+      component: () => import('@/views/members/list'),
+      name: 'MembersList',
+      meta: { title: '会员列表', icon: 'list' }
+    },
+    {
       path: 'create',
       component: () => import('@/views/members/create'),
       name: 'CreateMember',
@@ -26,12 +32,6 @@ const membersRouter = {
       name: 'EditMember',
       meta: { title: '修改会员', noCache: true, activeMenu: '/members/list' },
       hidden: true
-    },
-    {
-      path: 'list',
-      component: () => import('@/views/members/list'),
-      name: 'MembersList',
-      meta: { title: '会员列表', icon: 'list' }
     }
   ]
 }

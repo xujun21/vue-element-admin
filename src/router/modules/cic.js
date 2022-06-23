@@ -74,13 +74,13 @@ const cicRouter = {
           hidden: true
         }
       ]
-    },
-    {
-      path: 'reports',
-      name: 'Reports',
-      component: () => import('@/views/cic/reports/index'),
-      meta: { title: '数据报表' }
     }
+    // {
+    //   path: 'reports',
+    //   name: 'Reports',
+    //   component: () => import('@/views/cic/reports/index'),
+    //   meta: { title: '数据报表' }
+    // }
 
   ]
 }

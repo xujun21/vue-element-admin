@@ -63,6 +63,15 @@
       >
         新建记录
       </el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-document"
+        @click="handleExport"
+      >
+        导出记录
+      </el-button>
     </div>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
@@ -212,6 +221,19 @@ export default {
     },
     handleCreate() {
       this.$router.push('/cic/records/create')
+    },
+    handleExport() {
+      this.listLoading = true
+      this.$alert('开始导出记录，记录要包含大区、事业部、门店信息', '导出记录', {
+        confirmButtonText: '确定',
+        callback: action => {
+          // this.$message({
+          //   type: 'info',
+          //   message: `action: ${ action }`
+          // });
+          this.listLoading = false
+        }
+      })
     }
   }
 }

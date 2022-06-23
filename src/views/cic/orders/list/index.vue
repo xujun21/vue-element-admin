@@ -19,6 +19,9 @@
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         新建工单
       </el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-document" @click="handleExport">
+        导出工单
+      </el-button>
     </div>
 
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
@@ -104,6 +107,7 @@
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 import { fetchOrdersList } from '@/api/cic'
+import { Dialog } from 'element-ui'
 
 export default {
   name: 'OrdersList',
@@ -179,6 +183,19 @@ export default {
     },
     handleCreate() {
       this.$router.push('/cic/orders/create')
+    },
+    handleExport() {
+      this.listLoading = true
+      this.$alert('开始导出工单，工单要包含大区、事业部、门店信息', '导出工单', {
+        confirmButtonText: '确定',
+        callback: action => {
+          // this.$message({
+          //   type: 'info',
+          //   message: `action: ${ action }`
+          // });
+          this.listLoading = false
+        }
+      })
     }
   }
 }

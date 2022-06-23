@@ -9,114 +9,124 @@
       </sticky>
 
       <div class="createPost-main-container">
-        <el-row v-if="isEdit" :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="ID" class="postInfo-container-item">
-              <span>{{ this.id }}</span>
-            </el-form-item>
+        <el-row :span="24">
+          <el-col :span="10">
+            <el-row v-if="isEdit">
+              <el-col>
+                <el-form-item label-width="150px" label="ID" class="postInfo-container-item">
+                  <span>{{ this.id }}</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="主题：" class="postInfo-container-item">
+                  <el-input v-model="postForm.topic" type="text" autosize placeholder="主题来源于业务记录" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="描述：" class="postInfo-container-item">
+                  <el-input v-model="postForm.desc" type="textarea" autosize placeholder="描述来源于业务记录" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="咨询问题类型：" class="postInfo-container-item">
+                  <query-type placeholder="咨询问题类型来源于业务记录" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="客户姓名：" class="postInfo-container-item">
+                  <el-input v-model="postForm.nick_name" type="text" autosize placeholder="客户姓名" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="会员手机号：" class="postInfo-container-item">
+                  <el-input v-model="postForm.phone" type="text" autosize placeholder="会员手机号" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="大区：" class="postInfo-container-item">
+                  <el-select v-model="postForm.area" placeholder="选择所属大区">
+                    <el-option v-for="item in areaList" :key="item.vaule" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="事业部：" class="postInfo-container-item">
+                  <el-select v-model="postForm.city" placeholder="选择所属事业部">
+                    <el-option v-for="item in cityList" :key="item.vaule" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="门店：" class="postInfo-container-item">
+                  <el-select v-model="postForm.shop" placeholder="选择所属门店">
+                    <el-option v-for="item in shopList" :key="item.vaule" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="处理状态：" class="postInfo-container-item">
+                  <el-select v-model="postForm.status" placeholder="请选择处理状态">
+                    <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="优先级：" class="postInfo-container-item">
+                  <el-radio v-model="postForm.level" label="1">高</el-radio>
+                  <el-radio v-model="postForm.level" label="2">中</el-radio>
+                  <el-radio v-model="postForm.level" label="3">低</el-radio>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="咨询渠道：" class="postInfo-container-item">
+                  <el-select v-model="postForm.channel" placeholder="请选择咨询渠道">
+                    <el-option v-for="item in channelList" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-form-item label-width="150px" label="对接人：" class="postInfo-container-item">
+                  <el-select v-model="postForm.receiver" filterable placeholder="请选择对接人">
+                    <el-option v-for="item in receiverList" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col v-if="isEdit" :span="14" class="createPost-log-container">
+            <el-tag>日志</el-tag>
+            <el-table :data="tableData">
+              <el-table-column prop="date" label="日期" width="180" />
+              <el-table-column prop="name" label="操作者" width="120" />
+              <el-table-column prop="action" label="动作" width="120" />
+              <el-table-column prop="content" label="内容" />
+            </el-table>
           </el-col>
         </el-row>
-        <el-row v-if="isEdit" :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="创建时间：" class="postInfo-container-item">
-              <span>{{ postForm.createdTime }}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="主题：" class="postInfo-container-item">
-              <el-input v-model="postForm.topic" type="text" autosize placeholder="主题" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="描述：" class="postInfo-container-item">
-              <el-input v-model="postForm.desc" type="textarea" autosize placeholder="描述来源于业务记录" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="咨询问题类型：" class="postInfo-container-item">
-              <el-select v-model="postForm.type" placeholder="咨询问题类型">
-                <el-option v-for="item in typeList" :key="item.value" :value="item.value">{{ item.label }}</el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="" class="postInfo-container-item">
-              <el-select v-model="postForm.type" placeholder="咨询问题类型">
-                <el-option v-for="item in typeList" :key="item.value" :value="item.value">{{ item.label }}</el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="客户姓名：" class="postInfo-container-item">
-              <el-input v-model="postForm.nick_name" type="text" autosize placeholder="客户姓名" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="会员手机号：" class="postInfo-container-item">
-              <el-input v-model="postForm.phone" type="text" autosize placeholder="会员手机号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="大区：" class="postInfo-container-item">
-              <el-select v-model="postForm.area" placeholder="选择所属大区">
-                <el-option v-for="item in areaList" :key="item.vaule" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="事业部：" class="postInfo-container-item">
-              <el-select v-model="postForm.city" placeholder="选择所属事业部">
-                <el-option v-for="item in cityList" :key="item.vaule" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="门店：" class="postInfo-container-item">
-              <el-select v-model="postForm.shop" placeholder="选择所属门店">
-                <el-option v-for="item in shopList" :key="item.vaule" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="处理状态：" class="postInfo-container-item">
-              <el-select v-model="postForm.status" placeholder="请选择处理状态">
-                <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="32">
-          <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="优先级：" class="postInfo-container-item">
-              <el-radio v-model="postForm.level" label="1">高</el-radio>
-              <el-radio v-model="postForm.level" label="2">中</el-radio>
-              <el-radio v-model="postForm.level" label="3">低</el-radio>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        咨询渠道
-        对接人
-        对接人工号
       </div>
     </el-form>
   </div>
@@ -125,9 +135,10 @@
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { fetchOrder } from '@/api/cic'
+import QueryType from '@/components/QueryType'
 
 const defaultForm = {
-  status: 'draft',
+  status: '待处理',
   id: undefined,
   nick_name: '',
   area: ''
@@ -135,7 +146,7 @@ const defaultForm = {
 
 export default {
   name: 'OrderDetail',
-  components: { Sticky },
+  components: { Sticky, QueryType },
   props: {
     isEdit: {
       type: Boolean,
@@ -155,17 +166,54 @@ export default {
         callback()
       }
     }
+    const logItem = [{
+      date: '2022-06-15 11:32:23',
+      name: '客服主管',
+      action: '关闭工单',
+      content: '【工单状态变为“处理完毕”】'
+    }, {
+      date: '2022-06-14 13:31:41',
+      name: '客服小李',
+      action: '已回访',
+      content: '回访用户，用户表示满意。【工单状态变为“待回访”】'
+    }, {
+      date: '2022-06-14 13:31:41',
+      name: '客服小李',
+      action: '待回访',
+      content: '修改工单状态【工单状态变为“待回访”】'
+    }, {
+      date: '2022-06-14 12:31:01',
+      name: '张小二',
+      action: '回复',
+      content: '用户已经沟通完成，反馈用户1000积分作为补偿。【工单状态变为“已回复”】'
+    }, {
+      date: '2022-06-12 15:30:00',
+      name: '张小二',
+      action: '查看',
+      content: '【工单状态变为“已查看”】'
+    }, {
+      date: '2022-06-12 10:45:20',
+      name: '客服小李',
+      action: '指派',
+      content: '指派大南区广州事业部宝岛眼镜百信店张小二处理任务。【工单状态变为“处理中”】'
+    }, {
+      date: '2022-06-12 10:45:20',
+      name: '客服小李',
+      action: '创建',
+      content: '创建了工单#77889'
+    }]
     return {
+      tableData: logItem,
       statusList: [
-        {
-          label: '所有',
-          value: '',
-          selected: false
-        },
         {
           label: '待处理',
           value: 'todo',
           selected: true
+        },
+        {
+          label: '已查看',
+          value: 'viewed',
+          selected: false
         },
         {
           label: '处理中',
@@ -191,20 +239,6 @@ export default {
           label: '处理完毕',
           value: 'done',
           selected: false
-        }
-      ],
-      typeList: [
-        {
-          value: '咨询',
-          label: '咨询'
-        },
-        {
-          value: '投诉',
-          label: '投诉'
-        },
-        {
-          value: '建议',
-          label: '建议'
         }
       ],
       areaList: [{
@@ -239,6 +273,19 @@ export default {
         value: '2',
         label: '微信客服'
       }],
+      receiverList: [{
+        value: 10000,
+        label: '10000 店员张三'
+      }, {
+        value: 10001,
+        label: '10001 店员Lisa'
+      }, {
+        value: 10002,
+        label: '10002 店长Tim'
+      }, {
+        value: 10003,
+        label: '10003 李老板'
+      }],
       postForm: Object.assign({}, defaultForm),
       loading: false,
       rules: {
@@ -254,7 +301,7 @@ export default {
     console.log('this.isEdit=' + this.isEdit)
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
-      this.fetchOrder(id)
+      this.fetchData(id)
       this.id = id
     }
 
@@ -302,20 +349,12 @@ export default {
             type: 'success',
             duration: 2000
           })
-          this.postForm.status = 'published'
           this.loading = false
         } else {
           console.log('提交失败!!')
           return false
         }
       })
-    },
-    handelView(p) {
-      if (p === 0) {
-        this.$router.push('/records/service_detail')
-      } else {
-        this.$router.push('/records/shopping_detail')
-      }
     }
   }
 }
@@ -338,6 +377,10 @@ export default {
       .postInfo-container-item {
         float: left;
       }
+    }
+
+    .createPost-log-container {
+      padding: 0px 40px;
     }
   }
 

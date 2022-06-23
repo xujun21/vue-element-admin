@@ -3,14 +3,17 @@
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
 
       <sticky :z-index="10" :class-name="'sub-navbar '+postForm.status">
-        <el-button v-loading="loading" style="margin-left: 10px;" @click="handelView(0)">
+        <el-button v-if="isEdit" v-loading="loading" style="margin-left: 10px;" @click="handelView(0)">
           验光记录
         </el-button>
-        <el-button v-loading="loading" style="margin-left: 10px;" @click="handelView(1)">
+        <el-button v-if="isEdit" v-loading="loading" style="margin-left: 10px;" @click="handelView(1)">
           购物记录
         </el-button>
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
           保存提交
+        </el-button>
+        <el-button v-if="isEdit" v-loading="loading" style="margin-left: 10px;" @click="handelRecord">
+          新建客服记录
         </el-button>
       </sticky>
 
@@ -327,6 +330,9 @@ export default {
       } else {
         this.$router.push('/members/shopping_detail')
       }
+    },
+    handelRecord() {
+      this.$router.push('/cic/records/create')
     }
   }
 }

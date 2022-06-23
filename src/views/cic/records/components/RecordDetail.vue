@@ -6,7 +6,7 @@
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
           保存记录
         </el-button>
-        <el-button v-loading="loading" style="margin-left: 10px;" @click="handelView(1)">
+        <el-button v-if="isEdit" v-loading="loading" style="margin-left: 10px;" @click="handelOrder">
           创建工单
         </el-button>
       </sticky>
@@ -36,9 +36,7 @@
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
             <el-form-item label-width="150px" label="咨询问题类型：" class="postInfo-container-item">
-              <el-select v-model="postForm.type" placeholder="咨询问题类型">
-                <el-option v-for="item in typeList" :key="item.value" :value="item.value">{{ item.label }}</el-option>
-              </el-select>
+              <query-type />
             </el-form-item>
           </el-col>
         </el-row>
@@ -51,8 +49,15 @@
         </el-row>
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
-            <el-form-item label-width="150px" label="记录手机号：" class="postInfo-container-item">
-              <el-input v-model="postForm.phone" type="text" autosize placeholder="记录手机号" />
+            <el-form-item label-width="150px" label="会员手机号：" class="postInfo-container-item">
+              <el-input v-model="postForm.phone" type="text" autosize placeholder="会员手机号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="32">
+          <el-col :xs="24" :sm="24" :lg="8">
+            <el-form-item label-width="150px" label="联系方式：" class="postInfo-container-item">
+              <el-input v-model="postForm.tel" type="text" autosize placeholder="联系方式" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -115,7 +120,7 @@
         <el-row :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
             <el-form-item label-width="150px" label="描述：" class="postInfo-container-item">
-              <el-input v-model="postForm.desc" type="textarea" autosize placeholder="描述" />
+              <el-input v-model="postForm.desc" type="textarea" autosize placeholder="描述，最多500字" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -127,6 +132,7 @@
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { fetchRecord } from '@/api/cic'
+import QueryType from '@/components/QueryType'
 
 const defaultForm = {
   status: 'draft',
@@ -137,7 +143,7 @@ const defaultForm = {
 
 export default {
   name: 'RecordDetail',
-  components: { Sticky },
+  components: { Sticky, QueryType },
   props: {
     isEdit: {
       type: Boolean,
@@ -158,20 +164,20 @@ export default {
       }
     }
     return {
-      typeList: [
-        {
-          value: '咨询',
-          label: '咨询'
-        },
-        {
-          value: '投诉',
-          label: '投诉'
-        },
-        {
-          value: '建议',
-          label: '建议'
-        }
-      ],
+      // typeList: [
+      //   {
+      //     value: '咨询',
+      //     label: '咨询'
+      //   },
+      //   {
+      //     value: '投诉',
+      //     label: '投诉'
+      //   },
+      //   {
+      //     value: '建议',
+      //     label: '建议'
+      //   }
+      // ],
       areaList: [{
         value: '0',
         label: '华东区'
@@ -219,7 +225,8 @@ export default {
     console.log(this.isEdit)
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
-      this.fetchRecord(id)
+      console.log(id)
+      this.fetchData(id)
       this.id = id
     }
 
@@ -275,12 +282,8 @@ export default {
         }
       })
     },
-    handelView(p) {
-      if (p === 0) {
-        this.$router.push('/records/service_detail')
-      } else {
-        this.$router.push('/records/shopping_detail')
-      }
+    handelOrder() {
+      this.$router.push('/cic/orders/create')
     }
   }
 }
