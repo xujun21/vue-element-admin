@@ -107,7 +107,6 @@
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 import { fetchOrdersList } from '@/api/cic'
-import { Dialog } from 'element-ui'
 
 export default {
   name: 'OrdersList',

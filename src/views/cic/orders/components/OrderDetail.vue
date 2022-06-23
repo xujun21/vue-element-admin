@@ -6,6 +6,9 @@
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
           保存工单
         </el-button>
+        <el-button v-loading="loading" style="margin-left: 10px;" @click="resubmit">
+          再次发送任务
+        </el-button>
       </sticky>
 
       <div class="createPost-main-container">
@@ -14,7 +17,7 @@
             <el-row v-if="isEdit">
               <el-col>
                 <el-form-item label-width="150px" label="ID" class="postInfo-container-item">
-                  <span>{{ this.id }}</span>
+                  <span>{{ id }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -91,10 +94,9 @@
             </el-row>
             <el-row>
               <el-col>
-                <el-form-item label-width="150px" label="优先级：" class="postInfo-container-item">
-                  <el-radio v-model="postForm.level" label="1">高</el-radio>
-                  <el-radio v-model="postForm.level" label="2">中</el-radio>
-                  <el-radio v-model="postForm.level" label="3">低</el-radio>
+                <el-form-item label-width="150px" label="紧急程度：" class="postInfo-container-item">
+                  <el-radio v-model="postForm.level" label="1">紧急（4小时内回复）</el-radio>
+                  <el-radio v-model="postForm.level" label="2">非紧急（24小时内回复）</el-radio>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -118,13 +120,26 @@
             </el-row>
           </el-col>
           <el-col v-if="isEdit" :span="14" class="createPost-log-container">
-            <el-tag>日志</el-tag>
-            <el-table :data="tableData">
-              <el-table-column prop="date" label="日期" width="180" />
-              <el-table-column prop="name" label="操作者" width="120" />
-              <el-table-column prop="action" label="动作" width="120" />
-              <el-table-column prop="content" label="内容" />
-            </el-table>
+            <el-row class="createPost-log-row">
+              <el-tag>日志</el-tag>
+              <el-table :data="tableData">
+                <el-table-column prop="date" label="日期" width="180" />
+                <el-table-column prop="name" label="操作者" width="120" />
+                <el-table-column prop="action" label="动作" width="120" />
+                <el-table-column prop="content" label="内容" />
+              </el-table>
+            </el-row>
+            <el-row>
+              <el-tag>客服备注</el-tag>
+              <el-form>
+                <el-form-item>
+                  <el-input v-model="memo" class="article-textarea" type="textarea" autosize placeholder="客服添加的备注" />
+                </el-form-item>
+                <el-form-item>
+                  <el-button @click="handelSaveMemo">保存客服备注</el-button>
+                </el-form-item>
+              </el-form>
+            </el-row>
           </el-col>
         </el-row>
       </div>
@@ -136,6 +151,7 @@
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { fetchOrder } from '@/api/cic'
 import QueryType from '@/components/QueryType'
+import { parseTime } from '@/utils/index'
 
 const defaultForm = {
   status: '待处理',
@@ -146,7 +162,7 @@ const defaultForm = {
 
 export default {
   name: 'OrderDetail',
-  components: { Sticky, QueryType },
+  components: { Sticky, QueryType, parseTime },
   props: {
     isEdit: {
       type: Boolean,
@@ -175,7 +191,7 @@ export default {
       date: '2022-06-14 13:31:41',
       name: '客服小李',
       action: '已回访',
-      content: '回访用户，用户表示满意。【工单状态变为“待回访”】'
+      content: '回访用户，用户表示满意。【工单状态变为“已回访”】'
     }, {
       date: '2022-06-14 13:31:41',
       name: '客服小李',
@@ -185,7 +201,7 @@ export default {
       date: '2022-06-14 12:31:01',
       name: '张小二',
       action: '回复',
-      content: '用户已经沟通完成，反馈用户1000积分作为补偿。【工单状态变为“已回复”】'
+      content: '用户已经沟通完成。【工单状态变为“已回复”】'
     }, {
       date: '2022-06-12 15:30:00',
       name: '张小二',
@@ -203,6 +219,7 @@ export default {
       content: '创建了工单#77889'
     }]
     return {
+      memo: '',
       tableData: logItem,
       statusList: [
         {
@@ -316,10 +333,6 @@ export default {
       fetchOrder(id).then(response => {
         this.postForm = response.data
 
-        // // just for test
-        // this.postForm.title += `   Article Id:${this.postForm.id}`
-        // this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
         // set tagsview title
         this.setTagsViewTitle()
 
@@ -355,6 +368,43 @@ export default {
           return false
         }
       })
+    },
+    resubmit() {
+      console.log(this.postForm)
+      this.$refs.postForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$notify({
+            title: '成功',
+            message: '再次发送成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.loading = false
+        } else {
+          console.log('提交失败!!')
+          return false
+        }
+      })
+    },
+    handelSaveMemo() {
+      const memo = this.memo
+      var time = Date.now()
+      var t = parseTime(time, '{y}-{m}-{d} {h}:{i}:{s}')
+
+      this.tableData.unshift({
+        date: t,
+        name: '客服小李',
+        action: '添加客服备注',
+        content: memo
+      })
+      this.memo = ''
+    },
+    filterHandler(value, row, column) {
+      console.log(value)
+      console.log(row)
+      console.log(column)
+      return true
     }
   }
 }
@@ -381,6 +431,10 @@ export default {
 
     .createPost-log-container {
       padding: 0px 40px;
+      
+      .createPost-log-row {
+        padding: 0px 0px 20px 0px;
+      }
     }
   }
 

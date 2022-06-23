@@ -15,7 +15,7 @@
         <el-row v-if="isEdit" :gutter="32">
           <el-col :xs="24" :sm="24" :lg="8">
             <el-form-item label-width="150px" label="ID" class="postInfo-container-item">
-              <span>{{ this.id }}</span>
+              <span>{{ id }}</span>
             </el-form-item>
           </el-col>
         </el-row>
