@@ -4,10 +4,10 @@
 
       <sticky :z-index="10" :class-name="'sub-navbar ' + postForm.status">
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
-          保存工单
+          保存草稿
         </el-button>
         <el-button v-loading="loading" style="margin-left: 10px;" @click="resubmit">
-          再次发送任务
+          发送工单任务
         </el-button>
       </sticky>
 
@@ -358,7 +358,7 @@ export default {
           this.loading = true
           this.$notify({
             title: '成功',
-            message: '保存成功',
+            message: '保存成功，请点击“发送工单任务”进行任务下发。',
             type: 'success',
             duration: 2000
           })
@@ -376,7 +376,7 @@ export default {
           this.loading = true
           this.$notify({
             title: '成功',
-            message: '再次发送成功',
+            message: '发送成功',
             type: 'success',
             duration: 2000
           })
